@@ -578,19 +578,19 @@
 (defmacro defsnippet
  "Define a named snippet -- equivalent to (def name (snippet source selector args ...))."
  [name source selector args & forms]
- `(def ~name (snippet ~source ~selector ~args ~@forms)))
+ `(def ~(with-meta name {::templates source}) (snippet ~source ~selector ~args ~@forms)))
    
 (defmacro deftemplate
  "Defines a template as a function that returns a seq of strings." 
  [name source args & forms] 
-  `(def ~name (template ~source ~args ~@forms)))
+  `(def ~(with-meta name {::templates source}) (template ~source ~args ~@forms)))
 
 (defmacro defsnippets
  [source & specs]
  (let [xml-sym (gensym "xml")]
    `(let [~xml-sym (html-resource ~source)] 
       ~@(for [[name selector args & forms] specs]
-               `(def ~name (snippet ~xml-sym ~selector ~args ~@forms))))))
+               `(def ~(with-meta name {::templates source}) (snippet ~xml-sym ~selector ~args ~@forms))))))
 
 
 ;; transformations
